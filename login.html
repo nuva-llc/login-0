@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      /* ── Light theme (default) ── */
+:root,
+[data-theme="light"] {
+    --primary: #7839EE;
+    --primary-dark: #6025d1;
+    --primary-light: #a078f0;
+    --bg-card: #ffffff;
+    --bg-body-from: #a855f7;
+    --bg-body-via: #7c3aed;
+    --bg-body-to: #2563eb;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --input-bg: #f8fafc;
+    --input-border: #cbd5e1;
+    --input-focus-border: var(--primary);
+    --social-bg: #f1f5f9;
+    --social-bg-hover: #e2e8f0;
+    --divider: #e2e8f0;
+    --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --icon-color: #94a3b8;
+    --icon-focus-color: var(--primary);
+    --toggle-bg: rgba(255, 255, 255, 0.15);
+    --toggle-bg-hover: rgba(255, 255, 255, 0.25);
+    --toggle-color: #ffffff;
+}
+
+/* ── Dark theme — rose gold on deep plum ── */
+[data-theme="dark"] {
+    --primary: #f472b6;
+    --primary-dark: #ec4899;
+    --primary-light: #f9a8d4;
+    --bg-card: #1a0f1e;
+    --bg-body-from: #2e0c23;
+    --bg-body-via: #170a1c;
+    --bg-body-to: #100818;
+    --text-primary: #fdf2f8;
+    --text-secondary: #d4a5c2;
+    --text-muted: #7c5070;
+    --border: #3b1f35;
+    --input-bg: #140a18;
+    --input-border: #3b1f35;
+    --input-focus-border: var(--primary);
+    --social-bg: #140a18;
+    --social-bg-hover: #251530;
+    --divider: #3b1f35;
+    --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    --icon-color: #7c5070;
+    --icon-focus-color: var(--primary);
+    --toggle-bg: rgba(244, 114, 182, 0.08);
+    --toggle-bg-hover: rgba(244, 114, 182, 0.16);
+    --toggle-color: #fce7f3;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::selection {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* ── Body ── */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-body-from), var(--bg-body-via), var(--bg-body-to));
+    transition: background 0.4s ease;
+}
+
+/* ── Theme toggle ── */
+.theme-toggle {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 100;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    border: none;
+    background: var(--toggle-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--toggle-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--toggle-bg-hover);
+    transform: scale(1.05);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+[data-theme="light"] .theme-icon-sun {
+    display: none;
+}
+
+[data-theme="dark"] .theme-icon-moon {
+    display: none;
+}
+
+/* ── Card ── */
+.my-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 26rem;
+    padding: 2.5rem 2rem;
+    border-radius: 1.25rem;
+    box-shadow: var(--card-shadow);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ── Welcome section ── */
+.login-welcome-row {
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.logo {
+    height: 2.75rem;
+    margin: 0 auto 1rem;
+}
+
+[data-theme="dark"] .logo.logo-light {
+    display: none;
+}
+
+[data-theme="light"] .logo.logo-dark {
+    display: none;
+}
+
+.login-welcome-row h1 {
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin-bottom: 0.375rem;
+    transition: color 0.4s ease;
+}
+
+.login-welcome-row p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    transition: color 0.4s ease;
+}
+
+/* ── Inputs ── */
+.input__wrapper {
+    position: relative;
+}
+
+.input__field {
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    width: 100%;
+    padding: 0.8125rem 3.25rem 0.8125rem 2.75rem;
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.4s ease,
+                box-shadow 0.25s ease;
+}
+
+.input__field::placeholder {
+    color: transparent;
+}
+
+.input__field:hover {
+    border-color: var(--text-muted);
+}
+
+.input__field:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px rgba(120, 57, 238, 0.08);
+}
+
+[data-theme="dark"] .input__field:focus {
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.1);
+}
+
+.input__label {
+    position: absolute;
+    top: 50%;
+    left: 2.75rem;
+    transform: translateY(-50%);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.input__field:not(:placeholder-shown) ~ .input__label,
+.input__field:focus ~ .input__label {
+    top: 0;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--bg-card);
+    padding: 0 0.25rem;
+}
+
+.input__icon {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--icon-color);
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input__field:focus ~ .input__icon,
+.input__field:focus ~ .input__label ~ .input__icon {
+    color: var(--icon-focus-color);
+}
+
+/* Icon color on focus — the icon is before the input, so use :focus-within */
+.input__wrapper:focus-within .input__icon {
+    color: var(--icon-focus-color);
+}
+
+/* ── Password error ── */
+.password-error {
+    display: none;
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #ef4444;
+}
+
+.password-error.visible {
+    display: block;
+}
+
+/* ── Password toggle ── */
+.password-toggle {
+    position: absolute;
+    right: 0.625rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    color: var(--text-muted);
+    transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+    background-color: rgba(120, 57, 238, 0.08);
+}
+
+[data-theme="dark"] .password-toggle:hover {
+    background-color: rgba(244, 114, 182, 0.12);
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.password-toggle svg {
+    width: 1.375rem;
+    height: 1.375rem;
+    position: absolute;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.password-toggle .eye-open {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.password-toggle .eye-closed {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.password-toggle.active .eye-open {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.password-toggle.active .eye-closed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ── Submit button ── */
+.my-form__button {
+    font-family: inherit;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.25rem;
+    padding: 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 0.75rem;
+    transition: background-color 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.my-form__button:hover {
+    background-color: var(--primary-dark);
+    filter: brightness(1.08);
+    box-shadow: 0 0 20px -4px rgba(120, 57, 238, 0.3);
+}
+
+[data-theme="dark"] .my-form__button:hover {
+    box-shadow: 0 0 20px -4px rgba(244, 114, 182, 0.3);
+}
+
+.my-form__button:active {
+    filter: brightness(0.92);
+}
+
+.my-form__button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ── Divider ── */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+}
+
+.divider span {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* ── Social buttons ── */
+.socials-row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.socials-row img {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.socials-row > a {
+    padding: 0.6875rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--social-bg);
+    border: 1.5px solid var(--border);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.4s ease;
+}
+
+[data-theme="dark"] .socials-row > a[title="Use Apple"] img {
+    filter: invert(1);
+}
+
+.socials-row > a:hover {
+    background: var(--social-bg-hover);
+    border-color: var(--text-muted);
+}
+
+.socials-row > a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ── Form actions ── */
+.my-form__actions {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+.my-form__actions a {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.my-form__actions a:hover {
+    color: var(--primary);
+}
+
+.my-form__actions a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 0.125rem;
+}
+
+.my-form__actions span {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    transition: color 0.4s ease;
+}
+
+.my-form__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .my-form {
+        padding: 2rem 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .socials-row {
+        flex-direction: column;
+    }
+
+    .my-form__row {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <button class="theme-toggle" type="button" aria-label="Toggle dark mode">
+        <svg class="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <form class="my-form" aria-labelledby="login-title">
+        <div class="login-welcome-row">
+            <a href="#" title="Logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo logo-light">
+                <img src="assets/logo-dark.svg" alt="Logo" class="logo logo-dark">
+            </a>
+            <h1 id="login-title">Welcome back</h1>
+            <p>Please enter your details to sign in.</p>
+        </div>
+        <div class="input__wrapper">
+            <svg class="input__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <input type="email" id="email" name="email" class="input__field" placeholder="Your Email" required
+                autocomplete="email">
+            <label for="email" class="input__label">Email</label>
+        </div>
+        <div class="input__wrapper">
+            <svg class="input__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input id="password" type="password" class="input__field" placeholder="Your Password"
+                required autocomplete="current-password" minlength="6">
+            <label for="password" class="input__label">Password</label>
+            <span class="password-error" aria-live="polite"></span>
+            <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path>
+                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path>
+                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path>
+                    <path d="m2 2 20 20"></path>
+                </svg>
+            </button>
+        </div>
+        <button type="submit" class="my-form__button">
+            Sign In
+        </button>
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+        <div class="socials-row">
+            <a href="#" title="Use Google">
+                <img src="assets/google.png" alt="Google">
+                Google
+            </a>
+            <a href="#" title="Use Apple">
+                <img src="assets/apple.png" alt="Apple">
+                Apple
+            </a>
+        </div>
+        <div class="my-form__actions">
+            <div class="my-form__row">
+                <a href="#" title="Reset Password">
+                    Forgot password?
+                </a>
+                <span>
+                    <span>Don't have an account?</span>
+                    <a href="#" title="Create Account">
+                        Sign Up
+                    </a>
+                </span>
+            </div>
+        </div>
+    </form>
+
+    <script src="script.js"></script>
+    <script>
+      const loginForm = document.querySelector(".my-form");
+const passwordInput = document.getElementById("password");
+const passwordToggle = document.querySelector(".password-toggle");
+const themeToggle = document.querySelector(".theme-toggle");
+const passwordError = document.querySelector(".password-error");
+
+const rules = {
+  length: { test: (v) => v.length >= 6, msg: "At least 6 characters" },
+  letter: { test: (v) => /[A-Za-z]/.test(v), msg: "One letter" },
+  number: { test: (v) => /\d/.test(v), msg: "One number" },
+  symbol: { test: (v) => /[\W_]/.test(v), msg: "One symbol" },
+};
+
+function validate() {
+  const val = passwordInput.value;
+  const failing = Object.values(rules).filter((r) => !r.test(val));
+  const allValid = failing.length === 0;
+
+  passwordInput.setCustomValidity(allValid ? "" : "Password does not meet requirements");
+  return { allValid, failing };
+}
+
+passwordInput.addEventListener("input", () => {
+  const { allValid } = validate();
+  if (allValid && passwordError.textContent) {
+    passwordError.textContent = "";
+    passwordError.classList.remove("visible");
+  }
+});
+
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const { allValid, failing } = validate();
+
+  if (!allValid) {
+    passwordError.textContent = "Missing: " + failing.map((r) => r.msg.toLowerCase()).join(", ");
+    passwordError.classList.add("visible");
+    return;
+  }
+
+  passwordError.textContent = "";
+  passwordError.classList.remove("visible");
+
+  const email = document.getElementById("email");
+  console.log("Email:", email.value);
+  console.log("Password:", passwordInput.value);
+});
+
+passwordToggle.addEventListener("click", () => {
+  const isPassword = passwordInput.type === "password";
+  passwordInput.type = isPassword ? "text" : "password";
+  passwordToggle.classList.toggle("active", isPassword);
+});
+
+themeToggle.addEventListener("click", () => {
+  const html = document.documentElement;
+  const current = html.getAttribute("data-theme");
+  html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+});
+
+    </script>
+</body>
+
+</html>
